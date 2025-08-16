@@ -27,7 +27,7 @@ function generateMockActivityData(count = 50) {
     
     // Buckeye Nation Rewards activities  
     { name: "Kathleen P.", action: "earned 1,000 points for earning a reward", program: "Buckeye Nation Rewards" },
-    { name: "Taylor G.", action: "earned 300 points for watching a video", program: "Buckeye Nation Rewards" },
+    { name: "Gwen G.", action: "earned 300 points for watching a video", program: "Buckeye Nation Rewards" },
     { name: "Zahra S.", action: "signed in", program: "Buckeye Nation Rewards" },
     { name: "Matthew T.", action: "earned 1,000 points for earning a reward", program: "Buckeye Nation Rewards" },
     { name: "Joey B.", action: "earned 1,000 points for earning a reward", program: "Buckeye Nation Rewards" },
@@ -46,7 +46,7 @@ function generateMockActivityData(count = 50) {
     { name: "Kaitlyn M.", action: "earned 400 points for season ticket renewal", program: "CBJ Rush Rewards" },
     
     // U of U Plus activities
-    { name: "Taylor G.", action: "earned 250 points for reading an article", program: "U of U Plus" },
+    { name: "Joe R.", action: "earned 250 points for reading an article", program: "U of U Plus" },
     { name: "Ryan W.", action: "earned 25 points for viewing a post", program: "U of U Plus" },
     { name: "Morgan H.", action: "earned 300 points for campus event attendance", program: "U of U Plus" },
     { name: "Casey B.", action: "earned 150 points for alumni engagement", program: "U of U Plus" },

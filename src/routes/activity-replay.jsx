@@ -107,9 +107,57 @@ const ActivityReplay = () => {
     setVisiblePoints([]);
     setActiveRings([]);
     
+    // Show first activity immediately
+    const firstPoint = sortedPoints[0];
+    setVisiblePoints([{ ...firstPoint, id: 0 }]);
+    
+    // Add animated green ring for first activity
+    const firstRing = {
+      id: 0,
+      lat: firstPoint.lat,
+      lng: firstPoint.lon,
+      radius: 12,
+      color: '#22c55e',
+      speed: 6,
+      repeat: 1500,
+      timestamp: Date.now()
+    };
+    setActiveRings([firstRing]);
+    
+    // Set first activity card
+    const firstActivityType = getActivityType(firstPoint.label);
+    const firstCardData = {
+      id: 0,
+      lat: firstPoint.lat,
+      lng: firstPoint.lon,
+      text: firstPoint.label,
+      icon: firstActivityType.icon,
+      timestamp: Date.now()
+    };
+    setCurrentCard(firstCardData);
+    
+    // Focus globe on first activity
+    if (globeEl.current) {
+      globeEl.current.pointOfView({
+        lat: firstPoint.lat,
+        lng: firstPoint.lon,
+        altitude: 1.8
+      }, 1000);
+    }
+    
+    // Clear first card after duration
+    setTimeout(() => {
+      if (sortedPoints.length > 1) {
+        setCurrentCard(null);
+      }
+    }, playbackSpeed - 200);
+    
+    // Set up interval for subsequent activities
     intervalRef.current = setInterval(() => {
       setCurrentIndex(prevIndex => {
-        if (prevIndex >= sortedPoints.length) {
+        const nextIndex = prevIndex + 1;
+        
+        if (nextIndex >= sortedPoints.length) {
           // Auto-restart the replay for continuous loop
           setCurrentIndex(0);
           setVisiblePoints([]);
@@ -118,14 +166,14 @@ const ActivityReplay = () => {
           return 0;
         }
         
-        const point = sortedPoints[prevIndex];
+        const point = sortedPoints[nextIndex];
         
         // Add new point to visible points
-        setVisiblePoints(prev => [...prev, { ...point, id: prevIndex }]);
+        setVisiblePoints(prev => [...prev, { ...point, id: nextIndex }]);
         
         // Add animated green ring for this activity
         const ring = {
-          id: prevIndex,
+          id: nextIndex,
           lat: point.lat,
           lng: point.lon,
           radius: 12,
@@ -139,7 +187,7 @@ const ActivityReplay = () => {
         // Set current activity card (separate from pulsing rings)
         const activityType = getActivityType(point.label);
         const cardData = {
-          id: prevIndex,
+          id: nextIndex,
           lat: point.lat,
           lng: point.lon,
           text: point.label,
@@ -150,7 +198,7 @@ const ActivityReplay = () => {
         
         // Clear current card after duration (except if it's the last activity)
         setTimeout(() => {
-          if (prevIndex < sortedPoints.length - 1) {
+          if (nextIndex < sortedPoints.length - 1) {
             setCurrentCard(null);
           }
         }, playbackSpeed - 200);
@@ -164,7 +212,7 @@ const ActivityReplay = () => {
           }, 1000);
         }
         
-        return prevIndex + 1;
+        return nextIndex;
       });
     }, playbackSpeed);
   }, [sortedPoints, playbackSpeed]);
