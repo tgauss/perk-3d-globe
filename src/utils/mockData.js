@@ -1,64 +1,78 @@
 // Mock data generator for testing when Metabase is unavailable
-// Enhanced with diverse activities and realistic US metro + international locations
+// Based on actual Perk client activity data patterns
 export function generateMockActivityData(count = 50) {
-  // Expanded activity templates with more variety
+  // Real activity templates from your actual Perk clients
   const activityTemplates = [
-    // Gaming activities
-    { name: "Alex M.", action: "earned 150 points for completing a challenge", program: "M&M'S Fun Club" },
-    { name: "Jordan K.", action: "earned 100 points for playing a game", program: "GameStop PowerUp" },
-    { name: "Casey R.", action: "earned 75 points for achieving a high score", program: "Xbox Rewards" },
-    { name: "Taylor S.", action: "earned 200 points for daily game streak", program: "M&M'S Fun Club" },
+    // M&M'S Fun Club activities
+    { name: "Monica B.", action: "earned 100 points for playing a game", program: "M&M'S Fun Club" },
+    { name: "James W.", action: "earned 25 points for signing in", program: "M&M'S Fun Club" },
+    { name: "Bania C.", action: "earned 200 points for finishing a quiz", program: "M&M'S Fun Club" },
+    { name: "Carolyn J.", action: "earned 200 points for joining the program", program: "M&M'S Fun Club" },
+    { name: "Gaige H.", action: "earned 100 points for playing a game", program: "M&M'S Fun Club" },
+    { name: "mike e.", action: "earned 25 points for signing in", program: "M&M'S Fun Club" },
+    { name: "Catherine J.", action: "earned 5 points for viewing a post from M&M'S", program: "M&M'S Fun Club" },
+    { name: "Liz B.", action: "earned 200 points for joining the program", program: "M&M'S Fun Club" },
+    { name: "James C.", action: "earned 5 points for viewing a post from M&M'S", program: "M&M'S Fun Club" },
+    { name: "Roger S.", action: "earned 200 points for finishing a quiz", program: "M&M'S Fun Club" },
+    { name: "Amy S.", action: "earned 200 points for finishing a quiz", program: "M&M'S Fun Club" },
+    { name: "Melanie D.", action: "earned 5 points for viewing a post from M&M'S", program: "M&M'S Fun Club" },
+    { name: "Takka C.", action: "earned 5 points for viewing a post from M&M'S", program: "M&M'S Fun Club" },
+    { name: "Alex R.", action: "earned 150 points for completing a daily challenge", program: "M&M'S Fun Club" },
+    { name: "Maya K.", action: "earned 300 points for sharing with friends", program: "M&M'S Fun Club" },
+    { name: "Jordan L.", action: "earned 75 points for rating content", program: "M&M'S Fun Club" },
+    { name: "Sam P.", action: "earned 50 points for watching a brand video", program: "M&M'S Fun Club" },
+    { name: "Taylor D.", action: "earned 250 points for completing profile", program: "M&M'S Fun Club" },
     
-    // Social engagement
-    { name: "Morgan P.", action: "earned 25 points for signing in", program: "Starbucks Rewards" },
-    { name: "Riley H.", action: "earned 50 points for sharing on social media", program: "Nike Membership" },
-    { name: "Quinn B.", action: "earned 75 points for leaving a review", program: "Amazon Prime" },
-    { name: "Dakota L.", action: "earned 30 points for following on Instagram", program: "Target Circle" },
+    // Buckeye Nation Rewards activities  
+    { name: "Kathleen P.", action: "earned 1,000 points for earning a reward", program: "Buckeye Nation Rewards" },
+    { name: "Taylor G.", action: "earned 300 points for watching a video", program: "Buckeye Nation Rewards" },
+    { name: "Zahra S.", action: "signed in", program: "Buckeye Nation Rewards" },
+    { name: "Matthew T.", action: "earned 1,000 points for earning a reward", program: "Buckeye Nation Rewards" },
+    { name: "Joey B.", action: "earned 1,000 points for earning a reward", program: "Buckeye Nation Rewards" },
+    { name: "Chris M.", action: "earned 500 points for game day participation", program: "Buckeye Nation Rewards" },
+    { name: "Ashley W.", action: "earned 250 points for social media engagement", program: "Buckeye Nation Rewards" },
+    { name: "Derek K.", action: "earned 750 points for merchandise purchase", program: "Buckeye Nation Rewards" },
+    { name: "Lauren S.", action: "earned 200 points for event check-in", program: "Buckeye Nation Rewards" },
     
-    // Learning activities
-    { name: "Sage T.", action: "earned 200 points for finishing a quiz", program: "Duolingo Plus" },
-    { name: "River J.", action: "earned 250 points for completing a course", program: "Coursera Plus" },
-    { name: "Phoenix A.", action: "earned 150 points for reading an article", program: "Medium Membership" },
-    { name: "Skylar W.", action: "earned 300 points for watching a tutorial", program: "MasterClass" },
+    // CBJ Rush Rewards activities
+    { name: "Parker B.", action: "earned 200 points for clicking a link", program: "CBJ Rush Rewards" },
+    { name: "Journey M.", action: "earned 1,000 points for clicking a link", program: "CBJ Rush Rewards" },
+    { name: "Cannon H.", action: "earned 200 points for clicking a link", program: "CBJ Rush Rewards" },
+    { name: "Ryan C.", action: "earned 500 points for game attendance", program: "CBJ Rush Rewards" },
+    { name: "Madison T.", action: "earned 300 points for jersey purchase", program: "CBJ Rush Rewards" },
+    { name: "Brett L.", action: "earned 150 points for social sharing", program: "CBJ Rush Rewards" },
+    { name: "Kaitlyn M.", action: "earned 400 points for season ticket renewal", program: "CBJ Rush Rewards" },
     
-    // Shopping activities
-    { name: "Avery C.", action: "earned 500 points for making a purchase", program: "Best Buy Rewards" },
-    { name: "Parker D.", action: "earned 1,000 points for first purchase", program: "Nordstrom Rewards" },
-    { name: "Cameron F.", action: "spent 750 points to redeem free shipping", program: "Amazon Prime" },
-    { name: "Reese G.", action: "earned 250 points for product review", program: "Sephora Beauty Insider" },
+    // U of U Plus activities
+    { name: "Taylor G.", action: "earned 250 points for reading an article", program: "U of U Plus" },
+    { name: "Ryan W.", action: "earned 25 points for viewing a post", program: "U of U Plus" },
+    { name: "Morgan H.", action: "earned 300 points for campus event attendance", program: "U of U Plus" },
+    { name: "Casey B.", action: "earned 150 points for alumni engagement", program: "U of U Plus" },
+    { name: "Skyler P.", action: "earned 200 points for merchandise purchase", program: "U of U Plus" },
+    { name: "Jamie R.", action: "earned 100 points for game day check-in", program: "U of U Plus" },
     
-    // Fitness activities
-    { name: "Emery K.", action: "earned 100 points for workout completion", program: "Peloton Digital" },
-    { name: "Finley L.", action: "earned 200 points for step goal achievement", program: "Fitbit Premium" },
-    { name: "Rowan M.", action: "earned 150 points for nutrition tracking", program: "MyFitnessPal Premium" },
+    // Huskers Rewards activities
+    { name: "Carissa D.", action: "earned 1,000 points for answering a profile question", program: "Huskers Rewards" },
+    { name: "Derek H.", action: "earned 25 points for viewing a post", program: "Huskers Rewards" },
+    { name: "Blake M.", action: "earned 500 points for season ticket purchase", program: "Huskers Rewards" },
+    { name: "Alyssa K.", action: "earned 250 points for fan engagement", program: "Huskers Rewards" },
+    { name: "Trevor S.", action: "earned 350 points for merchandise order", program: "Huskers Rewards" },
     
-    // Entertainment
-    { name: "Sage N.", action: "earned 75 points for watching a video", program: "Disney+ Rewards" },
-    { name: "Blake O.", action: "earned 100 points for rating content", program: "Netflix Points" },
-    { name: "Ellis P.", action: "earned 50 points for creating a playlist", program: "Spotify Premium" },
+    // General Rewards activities
+    { name: "Brooke G.", action: "earned 500 points for answering a profile question", program: "Rewards" },
+    { name: "Nicole F.", action: "earned 300 points for completing survey", program: "Rewards" },
+    { name: "Connor P.", action: "earned 200 points for first-time participation", program: "Rewards" },
+    { name: "Emma L.", action: "earned 400 points for loyalty milestone", program: "Rewards" },
     
-    // Travel activities
-    { name: "Drew Q.", action: "earned 2,000 points for hotel booking", program: "Marriott Bonvoy" },
-    { name: "Sage R.", action: "earned 1,500 points for flight booking", program: "Delta SkyMiles" },
-    { name: "Lane S.", action: "earned 300 points for car rental", program: "Hertz Gold Plus" },
-    
-    // Food & Dining
-    { name: "Harper T.", action: "earned 200 points for restaurant check-in", program: "OpenTable Points" },
-    { name: "Reign U.", action: "earned 150 points for delivery order", program: "DoorDash DashPass" },
-    { name: "Sage V.", action: "earned 100 points for coffee purchase", program: "Starbucks Rewards" },
-    
-    // Program activities
-    { name: "River W.", action: "earned 200 points for joining the program", program: "CVS ExtraCare" },
-    { name: "Phoenix X.", action: "earned 500 points for profile completion", program: "Walgreens myWalgreens" },
-    { name: "Skylar Y.", action: "earned 1,000 points for birthday bonus", program: "Ulta Beauty Rewards" },
-    
-    // International activities
+    // PEDIGREE® GoodPoints™ Mexico activities
+    { name: "Ever T.", action: "spent 1 points to redeem Get $50MXN off your PEDIGREE® purchase", program: "PEDIGREE® GoodPoints™ Mexico" },
+    { name: "Huert T.", action: "spent 1 points to redeem Get $50MXN off your PEDIGREE® purchase", program: "PEDIGREE® GoodPoints™ Mexico" },
+    { name: "Olivia A.", action: "spent 1 points to redeem Help shelter dogs get cosy", program: "PEDIGREE® GoodPoints™ Mexico" },
     { name: "Diego R.", action: "spent 500 points to redeem pet food discount", program: "PEDIGREE® GoodPoints™ Mexico" },
-    { name: "Maria S.", action: "earned 300 points for survey completion", program: "Telcel Rewards Mexico" },
-    { name: "Jean-Luc M.", action: "earned 400 points for loyalty milestone", program: "Tim Hortons Rewards Canada" },
-    { name: "Sarah K.", action: "earned 250 points for app download", program: "Canadian Tire Triangle" },
-    { name: "Keoni P.", action: "earned 200 points for local business support", program: "Hawaii Rewards Network" },
-    { name: "Nalani H.", action: "earned 350 points for eco-friendly purchase", program: "Whole Foods Hawaii" }
+    { name: "Maria S.", action: "earned 300 points for survey completion", program: "PEDIGREE® GoodPoints™ Mexico" },
+    { name: "Carlos M.", action: "earned 200 points for product registration", program: "PEDIGREE® GoodPoints™ Mexico" },
+    { name: "Ana L.", action: "earned 150 points for social media follow", program: "PEDIGREE® GoodPoints™ Mexico" },
+    { name: "Roberto P.", action: "spent 250 points to redeem shelter donation", program: "PEDIGREE® GoodPoints™ Mexico" }
   ];
   
   // Realistic coordinates for major US metros and international locations
@@ -84,17 +98,21 @@ export function generateMockActivityData(count = 50) {
     { lat: 45.5152, lng: -122.6784, city: "Portland, OR" },
     { lat: 36.1699, lng: -115.1398, city: "Las Vegas, NV" },
     { lat: 35.2271, lng: -80.8431, city: "Charlotte, NC" },
+    
+    // Ohio (for Buckeye Nation)
     { lat: 39.9612, lng: -82.9988, city: "Columbus, OH" },
-    { lat: 43.0389, lng: -87.9065, city: "Milwaukee, WI" },
-    { lat: 35.1495, lng: -90.0490, city: "Memphis, TN" },
-    { lat: 44.9778, lng: -93.2650, city: "Minneapolis, MN" },
-    { lat: 29.9511, lng: -90.0715, city: "New Orleans, LA" },
     { lat: 41.4993, lng: -81.6944, city: "Cleveland, OH" },
     { lat: 39.1031, lng: -84.5120, city: "Cincinnati, OH" },
     { lat: 40.4406, lng: -79.9959, city: "Pittsburgh, PA" },
-    { lat: 38.9072, lng: -77.0369, city: "Washington, DC" },
-    { lat: 43.6532, lng: -116.3113, city: "Boise, ID" },
-    { lat: 47.0379, lng: -122.9007, city: "Olympia, WA" },
+    
+    // Utah (for U of U Plus)
+    { lat: 40.7608, lng: -111.8910, city: "Salt Lake City, UT" },
+    { lat: 40.2338, lng: -111.6585, city: "Provo, UT" },
+    { lat: 41.2230, lng: -111.9738, city: "Logan, UT" },
+    
+    // Nebraska (for Huskers)
+    { lat: 40.8136, lng: -96.7026, city: "Lincoln, NE" },
+    { lat: 41.2565, lng: -95.9345, city: "Omaha, NE" },
     
     // Alaska
     { lat: 61.2181, lng: -149.9003, city: "Anchorage, AK" },

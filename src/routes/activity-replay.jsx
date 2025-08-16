@@ -214,7 +214,10 @@ const ActivityReplay = () => {
   // Auto-start replay when data loads
   useEffect(() => {
     if (sortedPoints.length > 0 && !isPlaying && !userInteracted) {
-      startReplay();
+      // Small delay to ensure globe is fully loaded
+      setTimeout(() => {
+        startReplay();
+      }, 500);
     }
   }, [sortedPoints, startReplay, isPlaying, userInteracted]);
 
