@@ -7,6 +7,9 @@ import ArcsData from './routes/arcs-data';
 import RingsData from './routes/rings-data';
 import HTMLMarker from './routes/html-marker';
 import CustomLayer from './routes/custom-layer';
+import ActivityFeed from './routes/activity-feed';
+import ActivityReplay from './routes/activity-replay';
+import TestReplay from './routes/test-replay';
 
 import NotFound from './routes/not-found';
 
@@ -15,7 +18,11 @@ const App = () => {
     <main>
       <Routes>
         <Route path='/'>
-          <Route index element={<Finished />} />
+          <Route index element={<ActivityReplay />} />
+          <Route path='test-replay' element={<TestReplay />} />
+          <Route path='activity-replay' element={<ActivityReplay />} />
+          <Route path='activity-feed' element={<ActivityFeed />} />
+          <Route path='finished' element={<Finished />} />
           <Route path='basic-image' element={<BasicImage />} />
           <Route path='geojson-polygon' element={<GeojsonPolygon />} />
           <Route path='geojson-hexagon' element={<GeojsonHexagon />} />

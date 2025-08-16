@@ -1,15 +1,21 @@
 {
-  "name": "tns-react-3d-globe",
+  "name": "perk-activity-globe",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node server.js",
+    "dev:vite": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "vercel-build": "vite build"
   },
   "dependencies": {
+    "abort-controller": "^3.0.0",
+    "dotenv": "^17.2.1",
+    "express": "^4.18.2",
     "hex-rgb": "^5.0.0",
+    "node-fetch": "^3.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-globe.gl": "^2.27.1",
