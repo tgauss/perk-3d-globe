@@ -277,26 +277,127 @@ async function geocodeWithConcurrencyLimit(ips, limit = 5) {
   return results;
 }
 
+// Authenticate with Metabase and get session token
+async function getMetabaseSession() {
+  const { METABASE_URL, METABASE_USERNAME, METABASE_PASSWORD } = process.env;
+
+  if (!METABASE_URL || !METABASE_USERNAME || !METABASE_PASSWORD) {
+    throw new Error('Metabase credentials not configured');
+  }
+
+  const baseUrl = METABASE_URL.replace(/\/$/, '');
+  const response = await fetch(`${baseUrl}/api/session`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      username: METABASE_USERNAME,
+      password: METABASE_PASSWORD
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Metabase auth failed: ${response.status} ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data.id; // Session token
+}
+
+// Fetch data from Metabase question
+async function fetchMetabaseQuestion(sessionToken, questionId, parameters = {}) {
+  const { METABASE_URL } = process.env;
+  const baseUrl = METABASE_URL.replace(/\/$/, '');
+
+  // Build query parameters
+  const params = new URLSearchParams();
+  if (Object.keys(parameters).length > 0) {
+    params.append('parameters', JSON.stringify(parameters));
+  }
+
+  const url = `${baseUrl}/api/card/${questionId}/query/json${params.toString() ? '?' + params.toString() : ''}`;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 25000);
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Metabase-Session': sessionToken
+      },
+      signal: controller.signal
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      throw new Error(`Metabase query failed: ${response.status} ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    clearTimeout(timeout);
+    throw error;
+  }
+}
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  
+
   try {
     const { limit = 30 } = req.body;
-    
-    console.log('Using mock data (set USE_MOCK_DATA=false and configure Metabase credentials to use real data)');
-    const data = generateMockActivityData(limit);
-    
+    const useMockData = process.env.USE_MOCK_DATA === 'true';
+
+    let data;
+
+    if (useMockData) {
+      console.log('Using mock data (set USE_MOCK_DATA=false to use real Metabase data)');
+      data = generateMockActivityData(limit);
+    } else {
+      console.log('Fetching real data from Metabase question 178...');
+
+      try {
+        // Authenticate with Metabase
+        const sessionToken = await getMetabaseSession();
+        console.log('Metabase authentication successful');
+
+        // Fetch from question 178 with program_id filter
+        const parameters = [{ type: 'category', target: ['variable', ['template-tag', 'program_id']], value: '10000154' }];
+        data = await fetchMetabaseQuestion(sessionToken, 178, parameters);
+        console.log(`Fetched ${data.length} rows from Metabase`);
+
+        // Transform Metabase data structure to match expected format
+        data = data.map((row, index) => ({
+          sentence: row['Activity Marquee String'],
+          ts: row['Action Timestamp'],
+          ip: row['IP Address'],
+          action_id: row['Participant ID'] || index,
+          city: row['City'],
+          state: row['State']
+        }));
+
+        // Limit results if needed
+        if (limit && data.length > limit) {
+          data = data.slice(0, limit);
+        }
+      } catch (metabaseError) {
+        console.error('Metabase fetch failed, falling back to mock data:', metabaseError.message);
+        data = generateMockActivityData(limit);
+      }
+    }
+
     const validRows = data.filter(row => row.sentence && row.ts);
     console.log(`Found ${validRows.length} valid activity rows`);
     

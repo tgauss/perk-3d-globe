@@ -2,7 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Set IBM Plex Sans as the default font family */
+/* M&M'S Fun Club Brand Fonts */
+@font-face {
+  font-family: "All Together Serif";
+  src: url("https://res.cloudinary.com/basis/raw/upload/v1739299966/MMS%20Fun%20Club/AllTogetherSerifW05-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "All Together Serif";
+  src: url("https://res.cloudinary.com/basis/raw/upload/v1739299966/MMS%20Fun%20Club/AllTogetherSerifW05-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "All Together Sans";
+  src: url("https://res.cloudinary.com/basis/raw/upload/v1739299966/MMS%20Fun%20Club/AllTogetherSansW05-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Set All Together Sans as the default font family */
 body {
-  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: 'All Together Sans', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }

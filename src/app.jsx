@@ -10,6 +10,7 @@ import CustomLayer from './routes/custom-layer';
 import ActivityFeed from './routes/activity-feed';
 import ActivityReplay from './routes/activity-replay';
 import TestReplay from './routes/test-replay';
+import MMSGlobe from './routes/mms-globe';
 
 import NotFound from './routes/not-found';
 
@@ -19,6 +20,7 @@ const App = () => {
       <Routes>
         <Route path='/'>
           <Route index element={<ActivityReplay />} />
+          <Route path='mms' element={<MMSGlobe />} />
           <Route path='test-replay' element={<TestReplay />} />
           <Route path='activity-replay' element={<ActivityReplay />} />
           <Route path='activity-feed' element={<ActivityFeed />} />
