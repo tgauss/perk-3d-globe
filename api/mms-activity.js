@@ -1,8 +1,23 @@
 import fetch from 'node-fetch';
 import { AbortController } from 'abort-controller';
-import { getCachedCoordinates } from './cityStateCache.js';
 
 const geocodeCache = new Map();
+
+// Inline city/state cache to avoid import issues in Vercel
+const CITY_STATE_CACHE = {
+  "Irvine,CA": { lat: 33.6846, lon: -117.8265 },
+  "Park Ridge,IL": { lat: 42.0111, lon: -87.8406 },
+  "Warren,OH": { lat: 41.2376, lon: -80.8184 },
+  "Puyallup,WA": { lat: 47.1854, lon: -122.2929 },
+  "Eubank,KY": { lat: 37.2867, lon: -84.6530 },
+  // Add more as needed
+};
+
+function getCachedCoordinates(city, state) {
+  if (!city || !state) return null;
+  const key = `${city},${state}`;
+  return CITY_STATE_CACHE[key] || null;
+}
 
 // Authenticate with Metabase and get session token
 async function getMetabaseSession() {
