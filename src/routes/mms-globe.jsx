@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Globe from 'react-globe.gl';
 import { useMMSGlobeData } from '../hooks/useMMSGlobeData';
+import MMSLoadingScreen from '../components/MMSLoadingScreen';
 
 const MMSGlobe = () => {
   const globeEl = useRef();
-  const { points, isLoading, error } = useMMSGlobeData({ limit: 15 });
+  const { points, isLoading, error, isLoadingMore, totalFetched, maxTotal, isDataReady } = useMMSGlobeData();
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -353,6 +354,11 @@ const MMSGlobe = () => {
   // Don't clean up rings - keep them visible as permanent pin drops
   // Rings will grow once and remain at full size
 
+  // Show loading screen while initial data loads
+  if (isLoading) {
+    return <MMSLoadingScreen isDataReady={isDataReady} />;
+  }
+
   return (
     <div className="relative w-full h-screen" style={{ backgroundColor: '#FFD200' }}>
       <Globe
@@ -499,10 +505,10 @@ const MMSGlobe = () => {
         />
       </div>
 
-      {/* Loading indicator */}
-      {isLoading && (
-        <div className="absolute top-4 left-4 bg-blue-900/80 text-white p-3 rounded-lg text-sm">
-          Loading real M&M'S data...
+      {/* Progressive loading indicator */}
+      {isLoadingMore && (
+        <div className="absolute top-4 left-4 bg-blue-900/60 text-white p-3 rounded-lg text-sm backdrop-blur-sm">
+          Loading more activities... ({totalFetched}/{maxTotal})
         </div>
       )}
 

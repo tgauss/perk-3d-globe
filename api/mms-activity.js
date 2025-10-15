@@ -258,8 +258,9 @@ export default async function handler(req, res) {
 
   try {
     const { limit = 50 } = req.body;
+    const maxLimit = Math.min(limit, 100); // Cap at 100 for performance
 
-    console.log('Fetching M&M\'S Fun Club data from Metabase question 178...');
+    console.log(`Fetching M&M'S Fun Club data from Metabase question 178 (limit: ${maxLimit})...`);
 
     // Authenticate with Metabase
     const sessionToken = await getMetabaseSession();
@@ -291,7 +292,7 @@ export default async function handler(req, res) {
     console.log(`Found ${validRows.length} valid activity rows`);
 
     // Limit results
-    const rowsToProcess = validRows.slice(0, limit);
+    const rowsToProcess = validRows.slice(0, maxLimit);
 
     // Separate rows with IPs from those needing city/state geocoding
     const rowsWithIP = [];
@@ -395,6 +396,11 @@ export default async function handler(req, res) {
 
     console.log(`Geocoding summary: ${fromIP} from IP, ${fromCityState} from city/state, ${failed} failed`);
     console.log(`Returning ${points.length} points to client`);
+
+    // Set no-cache headers to ensure fresh data on every request
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
 
     res.status(200).json({
       points,
