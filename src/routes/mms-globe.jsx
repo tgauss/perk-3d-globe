@@ -239,7 +239,7 @@ const MMSGlobe = () => {
         // Add new point to visible points
         setVisiblePoints(prev => [...prev, { ...point, id: nextIndex }]);
 
-        // Add animated ring for this activity with activity color
+        // Only add ring for the NEW activity (clear old rings, keep only current)
         const activityType = getActivityType(point.label);
         const ring = {
           id: nextIndex,
@@ -251,7 +251,8 @@ const MMSGlobe = () => {
           repeat: 0, // Don't repeat - grow once and stay
           timestamp: Date.now()
         };
-        setActiveRings(prev => [...prev, ring]);
+        // Only keep the current ring, previous ones are replaced by static points
+        setActiveRings([ring]);
         
         // Set current activity card (separate from pulsing rings)
         const cardData = {
