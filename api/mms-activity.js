@@ -257,7 +257,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { limit = 30 } = req.body;
+    const { limit = 50 } = req.body;
 
     console.log('Fetching M&M\'S Fun Club data from Metabase question 178...');
 
@@ -282,7 +282,8 @@ export default async function handler(req, res) {
       ip: row['IP Address'],
       action_id: row['Participant ID'] || index,
       city: row['City'],
-      state: row['State']
+      state: row['State'],
+      points: row['Branded Points']
     }));
 
     // Filter valid rows
@@ -330,6 +331,7 @@ export default async function handler(req, res) {
             actionId: row.action_id,
             city: row.city,
             state: row.state,
+            points: row.points,
             source: 'ip'
           });
           fromIP++;
@@ -373,6 +375,7 @@ export default async function handler(req, res) {
             actionId: row.action_id,
             city: row.city,
             state: row.state,
+            points: row.points,
             source: cachedHit ? 'cache' : 'city-state'
           });
           if (cachedHit) fromCache++;
@@ -386,6 +389,9 @@ export default async function handler(req, res) {
         console.log(`${fromCache} locations loaded instantly from cache!`);
       }
     }
+
+    // Sort by timestamp (most recent first)
+    points.sort((a, b) => b.timestamp - a.timestamp);
 
     console.log(`Geocoding summary: ${fromIP} from IP, ${fromCityState} from city/state, ${failed} failed`);
     console.log(`Returning ${points.length} points to client`);
