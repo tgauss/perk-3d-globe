@@ -393,29 +393,32 @@ const MMSGlobe = () => {
 
       />
       
-      {/* Independent Activity Card Overlay - Not connected to Globe */}
+      {/* Independent Activity Card Overlay - Fixed bottom on mobile, centered on desktop */}
       {currentCard && (
         <div className="fixed inset-0 pointer-events-none z-50">
           <div
-            className="absolute left-1/2 transform -translate-x-1/2"
+            className="absolute left-1/2"
             style={{
-              // Mobile-first positioning: upper third on mobile, center on desktop
-              top: isMobile ? '30%' : '50%',
-              transform: 'translate(-50%, -50%)',
+              // Mobile: fixed bottom center, Desktop: centered
+              bottom: isMobile ? '40px' : 'auto',
+              top: isMobile ? 'auto' : '50%',
+              left: '50%',
+              transform: isMobile ? 'translateX(-50%)' : 'translate(-50%, -50%)',
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
               border: `2px solid ${currentCard.color || '#FA6400'}`,
               borderRadius: '16px',
               padding: isMobile ? '14px 18px' : '18px 24px',
-              maxWidth: isMobile ? '300px' : '360px',
-              minWidth: isMobile ? '220px' : '280px',
-              margin: isMobile ? '0 16px' : '0',
+              maxWidth: isMobile ? 'calc(100% - 32px)' : '360px',
+              minWidth: isMobile ? '280px' : '280px',
+              width: isMobile ? 'calc(100% - 32px)' : 'auto',
+              margin: '0',
               boxShadow: `
                 0 12px 40px rgba(0, 0, 0, 0.15),
                 0 4px 12px rgba(0, 0, 0, 0.1)
               `,
-              animation: 'cardSlideIn 0.6s ease-out forwards'
+              animation: isMobile ? 'cardSlideUp 0.6s ease-out forwards' : 'cardSlideIn 0.6s ease-out forwards'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
@@ -466,11 +469,22 @@ const MMSGlobe = () => {
         @keyframes cardSlideIn {
           0% {
             opacity: 0;
-            transform: translateY(-20px) scale(0.95);
+            transform: translate(-50%, -50%) translateY(-20px) scale(0.95);
           }
           100% {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translate(-50%, -50%) translateY(0) scale(1);
+          }
+        }
+
+        @keyframes cardSlideUp {
+          0% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(30px) scale(0.95);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
           }
         }
       `}</style>
