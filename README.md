@@ -5,9 +5,11 @@ A beautiful 3D globe visualization showing real-time Perk user activities from a
 ## 🌍 Live Demo
 
 **Production**: [world.perklabs.dev](https://world.perklabs.dev)
+**M&M's Fun Club**: [world.perklabs.dev/mms](https://world.perklabs.dev/mms)
 
 ## ✨ Features
 
+### Main Globe (`/`)
 - **Real-time Activity Visualization**: Watch Perk user activities appear chronologically across the globe
 - **Interactive Globe**: Click on any activity point to see details
 - **Auto-playing Timeline**: Continuous 3-second intervals with auto-looping
@@ -15,6 +17,16 @@ A beautiful 3D globe visualization showing real-time Perk user activities from a
 - **Glassmorphic Design**: Modern translucent activity cards with activity-type icons
 - **Geographic Coverage**: Activities from major US metros, Alaska, Hawaii, Canada, and Mexico
 - **IBM Plex Sans Typography**: Professional, consistent font styling throughout
+
+### M&M's Fun Club Globe (`/mms`)
+- **Branded Experience**: M&M's yellow background (#FFD200) with light gray earth texture
+- **Color-Coded Activities**: M&M's brand colors (Brown, Yellow, Green, Blue, Orange, Red) for different activity types
+- **Points Display**: Shows earned/spent points as subtitle on activity cards (e.g., "+23,198 points")
+- **Official Typography**: All Together Sans and All Together Serif fonts from M&M's brand guidelines
+- **Fun Club Logo**: Official M&M's Fun Club branding in top-right corner
+- **Non-Repeating Pins**: Pin drop markers grow once and stay at full height
+- **Smart Caching**: 20-minute server-side cache with progressive loading (15 → 100 items)
+- **Dual Geocoding**: Both IP address and city/state location resolution
 
 ## 🎮 Activity Types
 
