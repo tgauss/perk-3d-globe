@@ -24,8 +24,8 @@ const MMSGlobe = () => {
   const interactionTimeoutRef = useRef(null);
   const timeUpdateRef = useRef(null);
 
-  // Sort points chronologically (oldest first for replay)
-  const sortedPoints = points.slice().sort((a, b) => a.timestamp - b.timestamp);
+  // Sort points chronologically (most recent first for replay)
+  const sortedPoints = points.slice().sort((a, b) => b.timestamp - a.timestamp);
 
   useEffect(() => {
     if (!globeEl.current) return;
