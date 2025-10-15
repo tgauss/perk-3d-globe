@@ -40,8 +40,22 @@ export const useMMSGlobeData = ({
       }
 
       const data = await response.json();
-      console.log(`[M&M'S Globe] Fetched ${data.points?.length || 0} fresh activities at ${new Date().toLocaleTimeString()}`);
-      return data.points || [];
+      const pointsWithTimestamps = data.points || [];
+
+      // Log timestamp info for debugging
+      if (pointsWithTimestamps.length > 0) {
+        const now = Date.now();
+        const oldestTimestamp = Math.min(...pointsWithTimestamps.map(p => p.timestamp));
+        const newestTimestamp = Math.max(...pointsWithTimestamps.map(p => p.timestamp));
+        const oldestAge = Math.floor((now - oldestTimestamp) / 1000 / 60); // minutes
+        const newestAge = Math.floor((now - newestTimestamp) / 1000 / 60); // minutes
+
+        console.log(`[M&M'S Globe] Fetched ${pointsWithTimestamps.length} activities:`);
+        console.log(`  - Oldest: ${oldestAge} minutes ago (${new Date(oldestTimestamp).toLocaleString()})`);
+        console.log(`  - Newest: ${newestAge} minutes ago (${new Date(newestTimestamp).toLocaleString()})`);
+      }
+
+      return pointsWithTimestamps;
     } catch (err) {
       console.error('Error fetching M&M\'S activity data:', err);
       throw err;
