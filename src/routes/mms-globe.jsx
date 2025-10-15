@@ -19,8 +19,10 @@ const MMSGlobe = () => {
     height: window.innerHeight
   });
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [currentTime, setCurrentTime] = useState(Date.now());
   const intervalRef = useRef(null);
   const interactionTimeoutRef = useRef(null);
+  const timeUpdateRef = useRef(null);
 
   // Sort points chronologically (oldest first for replay)
   const sortedPoints = points.slice().sort((a, b) => a.timestamp - b.timestamp);
@@ -84,6 +86,22 @@ const MMSGlobe = () => {
     if (minusMatch) return `-${minusMatch[1]} points`;
 
     return null;
+  };
+
+  // Format relative timestamp (e.g., "20s ago", "3min ago", "today", "recently")
+  const getRelativeTime = (timestamp) => {
+    const now = Date.now();
+    const diff = now - timestamp;
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days >= 1) return 'recently'; // Over 24 hours
+    if (hours >= 2) return 'today'; // Over 2 hours
+    if (hours >= 1) return `${hours}hr ago`; // 1+ hours
+    if (minutes >= 1) return `${minutes}min ago`; // 1+ minutes
+    return `${Math.max(1, seconds)}s ago`; // Seconds (minimum 1s)
   };
 
   const getActivityType = (activityText) => {
@@ -201,7 +219,8 @@ const MMSGlobe = () => {
       icon: firstActivityType.icon,
       color: firstActivityType.color,
       points: firstPoint.points,
-      timestamp: Date.now()
+      timestamp: firstPoint.timestamp, // Use actual activity timestamp
+      displayTime: Date.now() // When card was shown
     };
     setCurrentCard(firstCardData);
     
@@ -264,7 +283,8 @@ const MMSGlobe = () => {
           icon: activityType.icon,
           color: activityType.color,
           points: point.points,
-          timestamp: Date.now()
+          timestamp: point.timestamp, // Use actual activity timestamp
+          displayTime: Date.now() // When card was shown
         };
         setCurrentCard(cardData);
         
@@ -307,7 +327,8 @@ const MMSGlobe = () => {
       icon: activityType.icon,
       color: activityType.color,
       points: pointData.points,
-      timestamp: Date.now()
+      timestamp: pointData.timestamp, // Use actual activity timestamp
+      displayTime: Date.now() // When card was shown
     };
     setCurrentCard(cardData);
     
@@ -339,6 +360,19 @@ const MMSGlobe = () => {
       startReplay();
     }
   }, [sortedPoints, startReplay, isPlaying, userInteracted]);
+
+  // Update current time every second for relative timestamps
+  useEffect(() => {
+    timeUpdateRef.current = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+
+    return () => {
+      if (timeUpdateRef.current) {
+        clearInterval(timeUpdateRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -454,17 +488,33 @@ const MMSGlobe = () => {
                 }}>
                   {currentCard.text}
                 </div>
-                {currentCard.points && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: '6px',
+                  gap: '8px'
+                }}>
+                  {currentCard.points && (
+                    <div style={{
+                      color: currentCard.points.startsWith('-') ? '#D70100' : '#00A836',
+                      fontSize: isMobile ? '12px' : '13px',
+                      fontWeight: '700',
+                      fontFamily: '"All Together Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
+                    }}>
+                      {currentCard.points}
+                    </div>
+                  )}
                   <div style={{
-                    color: currentCard.points.startsWith('-') ? '#D70100' : '#00A836',
-                    fontSize: isMobile ? '12px' : '13px',
-                    fontWeight: '700',
-                    marginTop: '6px',
+                    color: '#999',
+                    fontSize: isMobile ? '11px' : '12px',
+                    fontWeight: '500',
+                    marginLeft: 'auto',
                     fontFamily: '"All Together Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
                   }}>
-                    {currentCard.points}
+                    {getRelativeTime(currentCard.timestamp)}
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>
