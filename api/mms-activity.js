@@ -280,6 +280,7 @@ export default async function handler(req, res) {
     data = data.map((row, index) => ({
       sentence: row['Activity Marquee String'],
       ts: row['Action Timestamp'],
+      timestamp_ms: row['Timestamp (ms)'], // Unix timestamp from SQL if available
       ip: row['IP Address'],
       action_id: row['Participant ID'] || index,
       city: row['City'],
@@ -328,7 +329,7 @@ export default async function handler(req, res) {
             lat: coords.lat,
             lon: coords.lon,
             label: row.sentence,
-            timestamp: new Date(row.ts).getTime(),
+            timestamp: row.timestamp_ms || new Date(row.ts).getTime(), // Use pre-calculated timestamp if available
             actionId: row.action_id,
             city: row.city,
             state: row.state,
@@ -372,7 +373,7 @@ export default async function handler(req, res) {
             lat: coords.lat,
             lon: coords.lon,
             label: row.sentence,
-            timestamp: new Date(row.ts).getTime(),
+            timestamp: row.timestamp_ms || new Date(row.ts).getTime(), // Use pre-calculated timestamp if available
             actionId: row.action_id,
             city: row.city,
             state: row.state,
