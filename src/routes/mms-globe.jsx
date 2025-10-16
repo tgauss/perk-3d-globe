@@ -434,17 +434,17 @@ const MMSGlobe = () => {
 
       />
       
-      {/* Independent Activity Card Overlay - Fixed bottom on mobile, centered on desktop */}
+      {/* Independent Activity Card Overlay - Fixed bottom on mobile, below center on desktop */}
       {currentCard && (
         <div className="fixed inset-0 pointer-events-none z-50">
           <div
             className="absolute left-1/2"
             style={{
-              // Mobile: fixed bottom center, Desktop: centered
-              bottom: isMobile ? '40px' : 'auto',
-              top: isMobile ? 'auto' : '50%',
+              // Mobile: fixed bottom center, Desktop: below center with spacing from pin
+              bottom: isMobile ? '40px' : '80px',
+              top: isMobile ? 'auto' : 'auto',
               left: '50%',
-              transform: isMobile ? 'translateX(-50%)' : 'translate(-50%, -50%)',
+              transform: 'translateX(-50%)',
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
@@ -459,7 +459,7 @@ const MMSGlobe = () => {
                 0 12px 40px rgba(0, 0, 0, 0.15),
                 0 4px 12px rgba(0, 0, 0, 0.1)
               `,
-              animation: isMobile ? 'cardSlideUp 0.6s ease-out forwards' : 'cardSlideIn 0.6s ease-out forwards'
+              animation: 'cardSlideUp 0.6s ease-out forwards'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
