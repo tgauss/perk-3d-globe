@@ -41,28 +41,25 @@ const MMSGlobe = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [playbackSpeed] = useState(propPlaybackSpeed); // Use prop value
   const [visiblePoints, setVisiblePoints] = useState([]);
-  const [activeRings, setActiveRings] = useState([]);
   const [currentCard, setCurrentCard] = useState(null);
   const [userInteracted, setUserInteracted] = useState(false);
-  const [dimensions, setDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight
-  });
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [currentTime, setCurrentTime] = useState(Date.now());
   const intervalRef = useRef(null);
   const interactionTimeoutRef = useRef(null);
   const timeUpdateRef = useRef(null);
+  const containerRef = useRef(null);
 
   // Sort points chronologically (most recent first for replay)
   const sortedPoints = points.slice().sort((a, b) => b.timestamp - a.timestamp);
 
+  // Handle responsive sizing with ResizeObserver for smooth, immediate updates
   useEffect(() => {
-    if (!globeEl.current) return;
-    
+    if (!globeEl.current || !containerRef.current) return;
+
     globeEl.current.controls().autoRotate = true;
     globeEl.current.controls().autoRotateSpeed = 0.2;
-    
+
     const directionalLight = globeEl.current
       .scene()
       .children.find((obj3d) => obj3d.type === 'DirectionalLight');
@@ -70,27 +67,32 @@ const MMSGlobe = ({
       directionalLight.intensity = 0.8;
     }
 
-    // Handle responsive sizing
-    const handleResize = () => {
-      const newDimensions = {
-        width: window.innerWidth,
-        height: window.innerHeight
-      };
-      setDimensions(newDimensions);
-      setIsMobile(window.innerWidth < 768);
-      
-      if (globeEl.current) {
+    // Use ResizeObserver for immediate, smooth responsive updates
+    const updateGlobeSize = () => {
+      if (containerRef.current && globeEl.current) {
+        const width = containerRef.current.offsetWidth;
+        const height = containerRef.current.offsetHeight;
+
         globeEl.current
-          .width(newDimensions.width)
-          .height(newDimensions.height);
+          .width(width)
+          .height(height);
+
+        setIsMobile(width < 768);
       }
     };
-    
-    // Add resize listener
-    window.addEventListener('resize', handleResize);
-    
+
+    // Initial size
+    updateGlobeSize();
+
+    // Use ResizeObserver for better performance than window resize event
+    const resizeObserver = new ResizeObserver(() => {
+      updateGlobeSize();
+    });
+
+    resizeObserver.observe(containerRef.current);
+
     return () => {
-      window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
     };
   }, []);
 
@@ -220,25 +222,16 @@ const MMSGlobe = ({
     setIsPlaying(true);
     setCurrentIndex(0);
     setVisiblePoints([]);
-    setActiveRings([]);
-    
-    // Show first activity immediately
+
+    // Show first activity immediately with vertical pillar
     const firstPoint = sortedPoints[0];
-    setVisiblePoints([{ ...firstPoint, id: 0 }]);
-    
-    // Add animated ring for first activity with activity color
     const firstActivityType = getActivityType(firstPoint.label);
-    const firstRing = {
+    setVisiblePoints([{
+      ...firstPoint,
       id: 0,
-      lat: firstPoint.lat,
-      lng: firstPoint.lon,
-      radius: 12,
       color: firstActivityType.color,
-      speed: 2,
-      repeat: 0, // Don't repeat - grow once and stay
-      timestamp: Date.now()
-    };
-    setActiveRings([firstRing]);
+      altitude: 0.03 // Vertical pillar height (0.03 = ~300km visible height)
+    }]);
     
     // Set first activity card
     const firstCardData = {
@@ -279,30 +272,20 @@ const MMSGlobe = ({
           // Auto-restart the replay for continuous loop
           setCurrentIndex(0);
           setVisiblePoints([]);
-          setActiveRings([]);
           setCurrentCard(null);
           return 0;
         }
         
         const point = sortedPoints[nextIndex];
-        
-        // Add new point to visible points
-        setVisiblePoints(prev => [...prev, { ...point, id: nextIndex }]);
 
-        // Only add ring for the NEW activity (clear old rings, keep only current)
+        // Add new point with vertical pillar
         const activityType = getActivityType(point.label);
-        const ring = {
+        setVisiblePoints(prev => [...prev, {
+          ...point,
           id: nextIndex,
-          lat: point.lat,
-          lng: point.lon,
-          radius: 12,
           color: activityType.color,
-          speed: 2,
-          repeat: 0, // Don't repeat - grow once and stay
-          timestamp: Date.now()
-        };
-        // Only keep the current ring, previous ones are replaced by static points
-        setActiveRings([ring]);
+          altitude: 0.03 // Vertical pillar height (0.03 = ~300km visible height)
+        }]);
         
         // Set current activity card (separate from pulsing rings)
         const cardData = {
@@ -415,8 +398,8 @@ const MMSGlobe = ({
     };
   }, []);
 
-  // Don't clean up rings - keep them visible as permanent pin drops
-  // Rings will grow once and remain at full size
+  // Vertical pillars are stored in visiblePoints with altitude property
+  // Each activity gets a colored pillar that stays at fixed height
 
   // Show loading screen while initial data loads
   if (isLoading) {
@@ -424,43 +407,32 @@ const MMSGlobe = ({
   }
 
   return (
-    <div className="relative w-full h-screen" style={{ backgroundColor: '#FFD200' }}>
+    <div
+      ref={containerRef}
+      className="relative w-full h-screen"
+      style={{
+        backgroundColor: '#FFD200',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
       <Globe
         ref={globeEl}
         globeImageUrl="/light-earth-map.jpg"
         backgroundColor="rgba(255,210,0,1)"
-        width={dimensions.width}
-        height={dimensions.height}
         atmosphereColor="rgba(200,200,200,0.3)"
         atmosphereAltitude={0.15}
 
-        // Static points for activities that have been shown - store activity type color
-        pointsData={visiblePoints.map(p => ({
-          ...p,
-          activityColor: getActivityType(p.label).color
-        }))}
+        // Vertical pillars for activities - using pointAltitude for height
+        pointsData={visiblePoints}
         pointLat={(p) => p.lat}
         pointLng={(p) => p.lon}
-        pointColor={(p) => p.activityColor || '#FA6400'}
-        pointAltitude={0.02}
-        pointRadius={0.5}
+        pointColor={(p) => p.color || '#FA6400'}
+        pointAltitude={(p) => p.altitude || 0.02}
+        pointRadius={0.3} // Thinner pillar width
         onPointClick={handleGlobeClick}
-
-        // Animated rings with activity-specific colors
-        ringsData={activeRings}
-        ringMaxRadius="radius"
-        ringColor={(ring) => {
-          // Convert hex to rgba with fade animation
-          const hex = ring.color;
-          const r = parseInt(hex.slice(1, 3), 16);
-          const g = parseInt(hex.slice(3, 5), 16);
-          const b = parseInt(hex.slice(5, 7), 16);
-          return (time) => `rgba(${r}, ${g}, ${b}, ${Math.sqrt(1 - time) * 0.9})`;
-        }}
-        ringPropagationSpeed="speed"
-        ringRepeatPeriod="repeat"
-        ringLat="lat"
-        ringLng="lng"
 
       />
       

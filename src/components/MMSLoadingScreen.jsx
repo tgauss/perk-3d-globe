@@ -104,36 +104,10 @@ const MMSLoadingScreen = ({ isDataReady = false }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
       style={{
-        background: 'linear-gradient(135deg, #FFD200 0%, #FFA500 100%)',
+        backgroundColor: '#FFD200',
         fontFamily: '"All Together Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
       }}
     >
-      {/* Animated background circles */}
-      <div className="absolute inset-0 overflow-hidden opacity-20">
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: '600px',
-            height: '600px',
-            background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)',
-            top: '10%',
-            left: '10%',
-            animation: 'float 6s ease-in-out infinite'
-          }}
-        />
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: '400px',
-            height: '400px',
-            background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)',
-            bottom: '10%',
-            right: '10%',
-            animation: 'float 8s ease-in-out infinite reverse'
-          }}
-        />
-      </div>
-
       {/* Main content */}
       <div className="relative z-10 max-w-2xl w-full px-6">
         {/* Logo */}
@@ -177,17 +151,9 @@ const MMSLoadingScreen = ({ isDataReady = false }) => {
               className="absolute inset-y-0 left-0 rounded-full transition-all duration-500 ease-out"
               style={{
                 width: `${progress}%`,
-                background: `linear-gradient(90deg, ${currentStageData.color} 0%, ${currentStageData.color}dd 100%)`
+                backgroundColor: currentStageData.color
               }}
-            >
-              <div
-                className="absolute inset-0 opacity-50"
-                style={{
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)',
-                  animation: 'shimmer 1.5s ease-in-out infinite'
-                }}
-              />
-            </div>
+            />
           </div>
 
           <div className="mt-2 text-right text-sm font-semibold" style={{ color: currentStageData.color }}>

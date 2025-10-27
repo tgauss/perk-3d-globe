@@ -17,9 +17,9 @@ WITH latest_per_participant AS (
          pa.actionable_id,
          pa.metadata
   FROM public.participant_actions pa
-  [[ WHERE pa.program_id = {{program_id}} ]]
   /* Get recent activities (last 7 days for time diversity) */
   WHERE pa.created_at >= NOW() - INTERVAL '7 days'
+    [[AND pa.program_id = {{program_id}}]]
   ORDER BY pa.participant_id, pa.created_at DESC, pa.id DESC
 )
 

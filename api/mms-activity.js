@@ -396,6 +396,18 @@ export default async function handler(req, res) {
     points.sort((a, b) => b.timestamp - a.timestamp);
 
     console.log(`Geocoding summary: ${fromIP} from IP, ${fromCityState} from city/state, ${failed} failed`);
+
+    // Debug: Log timestamp range
+    if (points.length > 0) {
+      const timestamps = points.map(p => p.timestamp).sort((a, b) => a - b);
+      const oldest = new Date(timestamps[0]).toISOString();
+      const newest = new Date(timestamps[timestamps.length - 1]).toISOString();
+      const now = new Date().toISOString();
+      console.log(`📅 Timestamp range: ${oldest} to ${newest}`);
+      console.log(`⏰ Current time: ${now}`);
+      console.log(`📊 Time spread: ${Math.round((timestamps[timestamps.length - 1] - timestamps[0]) / 1000 / 60)} minutes`);
+    }
+
     console.log(`Returning ${points.length} points to client`);
 
     // Set no-cache headers to ensure fresh data on every request
