@@ -5,7 +5,9 @@ export const useMMSGlobeData = ({
   batchSize = 30,
   maxTotal = 100,
   batchDelay = 15000, // 15 seconds between batches
-  minLoadingTime = 5000 // Minimum time to show loading screen (ms)
+  minLoadingTime = 5000, // Minimum time to show loading screen (ms)
+  apiEndpoint = '/api/mms-activity', // Configurable API endpoint
+  programId = '10000154' // M&M's Fun Club program ID
 } = {}) => {
   const [points, setPoints] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,7 +23,7 @@ export const useMMSGlobeData = ({
   const fetchBatch = async (limit, offset = 0) => {
     try {
       // Add timestamp to ensure fresh data on every request
-      const response = await fetch('/api/mms-activity', {
+      const response = await fetch(apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,6 +33,7 @@ export const useMMSGlobeData = ({
         },
         body: JSON.stringify({
           limit,
+          programId, // Allow filtering by program if API supports it
           _t: Date.now() // Cache-busting timestamp
         }),
       });

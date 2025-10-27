@@ -1,15 +1,45 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import Globe from 'react-globe.gl';
 import { useMMSGlobeData } from '../hooks/useMMSGlobeData';
 import MMSLoadingScreen from '../components/MMSLoadingScreen';
+import { DEFAULT_GLOBE_CONFIG } from '../constants/globe-config';
 
-const MMSGlobe = () => {
+const MMSGlobe = ({
+  // Data loading config
+  initialLimit = DEFAULT_GLOBE_CONFIG.initialLimit,
+  batchSize = DEFAULT_GLOBE_CONFIG.batchSize,
+  maxTotal = DEFAULT_GLOBE_CONFIG.maxTotal,
+  batchDelay = DEFAULT_GLOBE_CONFIG.batchDelay,
+  minLoadingTime = DEFAULT_GLOBE_CONFIG.minLoadingTime,
+
+  // API config
+  apiEndpoint = DEFAULT_GLOBE_CONFIG.apiEndpoint,
+  programId = DEFAULT_GLOBE_CONFIG.programId,
+
+  // Appearance
+  backgroundColor = DEFAULT_GLOBE_CONFIG.backgroundColor,
+  playbackSpeed: propPlaybackSpeed = DEFAULT_GLOBE_CONFIG.playbackSpeed,
+
+  // Callbacks
+  onActivityClick,
+  onLoad,
+  onError,
+}) => {
   const globeEl = useRef();
-  const { points, isLoading, error, isLoadingMore, totalFetched, maxTotal, isDataReady } = useMMSGlobeData();
+  const { points, isLoading, error, isLoadingMore, totalFetched, maxTotal: fetchedMax, isDataReady } = useMMSGlobeData({
+    initialLimit,
+    batchSize,
+    maxTotal,
+    batchDelay,
+    minLoadingTime,
+    apiEndpoint,
+    programId,
+  });
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [playbackSpeed, setPlaybackSpeed] = useState(3000); // ms between activities
+  const [playbackSpeed] = useState(propPlaybackSpeed); // Use prop value
   const [visiblePoints, setVisiblePoints] = useState([]);
   const [activeRings, setActiveRings] = useState([]);
   const [currentCard, setCurrentCard] = useState(null);
@@ -570,6 +600,29 @@ const MMSGlobe = () => {
       )}
     </div>
   );
+};
+
+// PropTypes for type safety and documentation
+MMSGlobe.propTypes = {
+  // Data loading configuration
+  initialLimit: PropTypes.number,
+  batchSize: PropTypes.number,
+  maxTotal: PropTypes.number,
+  batchDelay: PropTypes.number,
+  minLoadingTime: PropTypes.number,
+
+  // API configuration
+  apiEndpoint: PropTypes.string,
+  programId: PropTypes.string,
+
+  // Appearance
+  backgroundColor: PropTypes.string,
+  playbackSpeed: PropTypes.number,
+
+  // Callbacks
+  onActivityClick: PropTypes.func,
+  onLoad: PropTypes.func,
+  onError: PropTypes.func,
 };
 
 export default MMSGlobe;
