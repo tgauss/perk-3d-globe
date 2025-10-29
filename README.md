@@ -6,6 +6,23 @@ A beautiful 3D globe visualization showing real-time Perk user activities from a
 
 **Production**: [world.perklabs.dev](https://world.perklabs.dev)
 **M&M's Fun Club**: [world.perklabs.dev/mms](https://world.perklabs.dev/mms)
+**Vercel**: [perk-3d-globe.vercel.app](https://perk-3d-globe.vercel.app)
+
+## 📋 Latest Updates (October 27, 2025)
+
+**✅ Production Ready** - Fully responsive, brand-compliant, and portable for integration
+
+- **Responsive Globe**: ResizeObserver implementation for instant, smooth window resizing
+- **Vertical Activity Pillars**: Fixed-height colored markers (no looping animations)
+- **Brand Compliance**: Removed all gradients (M&M's guidelines)
+- **Timestamp Diversity**: Shows relative times from last 7 days ("3min ago", "2hr ago", "today")
+- **Component Portability**: Ready for integration into other React applications
+- **SQL Query Optimized**: Pre-calculated timestamps, better performance
+- **Clean Codebase**: Removed unused state, optimized structure
+
+**📚 Documentation**: See [INTEGRATION_QUICKSTART.md](INTEGRATION_QUICKSTART.md) for integration guide
+**📝 Session Notes**: See [SESSION_2025-10-27.md](SESSION_2025-10-27.md) for detailed technical notes
+**📖 Full History**: See [CHANGELOG.md](CHANGELOG.md) for complete change history
 
 ## ✨ Features
 
@@ -19,14 +36,18 @@ A beautiful 3D globe visualization showing real-time Perk user activities from a
 - **IBM Plex Sans Typography**: Professional, consistent font styling throughout
 
 ### M&M's Fun Club Globe (`/mms`)
-- **Branded Experience**: M&M's yellow background (#FFD200) with light gray earth texture
-- **Color-Coded Activities**: M&M's brand colors (Brown, Yellow, Green, Blue, Orange, Red) for different activity types
-- **Points Display**: Shows earned/spent points as subtitle on activity cards (e.g., "+23,198 points")
+- **Branded Experience**: M&M's yellow background (#FFD200) - no gradients (brand compliant)
+- **5-Stage Loading Screen**: Animated loading with M&M's colors showing data fetching process
+- **Vertical Activity Pillars**: Color-coded vertical markers (Brown, Yellow, Green, Blue, Orange, Red)
+- **Relative Timestamps**: Live-updating timestamps ("3min ago", "2hr ago", "today", "recently")
+- **Progressive Loading**: 20 initial activities → 100 total (batches of 30 every 15 seconds)
+- **Points Display**: Shows earned/spent points on activity cards (e.g., "+4,799 points")
 - **Official Typography**: All Together Sans and All Together Serif fonts from M&M's brand guidelines
 - **Fun Club Logo**: Official M&M's Fun Club branding in top-right corner
-- **Non-Repeating Pins**: Pin drop markers grow once and stay at full height
-- **Smart Caching**: 20-minute server-side cache with progressive loading (15 → 100 items)
-- **Dual Geocoding**: Both IP address and city/state location resolution
+- **Fully Responsive**: ResizeObserver for smooth window resizing on all devices
+- **Fresh Data**: Cache-busting ensures latest activities on every page load
+- **Time Diversity**: Activities sampled from last 7 days for variety
+- **Dual Geocoding**: IP address and city/state location resolution
 
 ## 🎮 Activity Types
 
